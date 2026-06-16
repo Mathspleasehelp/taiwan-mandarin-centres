@@ -293,6 +293,26 @@
       });
     }
 
+    // Offset markers that share identical coordinates so they're all clickable
+    const coordCount = {};
+    centres.forEach(c => {
+      const key = `${c.lat},${c.lon}`;
+      coordCount[key] = (coordCount[key] || 0) + 1;
+    });
+    const coordIndex = {};
+    centres.forEach(c => {
+      const key = `${c.lat},${c.lon}`;
+      if (coordCount[key] > 1) {
+        coordIndex[key] = (coordIndex[key] || 0);
+        const i = coordIndex[key]++;
+        const total = coordCount[key];
+        const angle = (2 * Math.PI * i) / total;
+        const r = 0.0006; // ~65m spread
+        c.lat = c.lat + r * Math.cos(angle);
+        c.lon = c.lon + r * Math.sin(angle);
+      }
+    });
+
     // Build markers
     const markers = centres.map(c => {
       const colour     = regionColours[c.region] || "#555";
