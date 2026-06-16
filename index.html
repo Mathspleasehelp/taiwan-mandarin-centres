@@ -143,6 +143,58 @@
       font-size: .72rem;
       margin-top: 8px;
     }
+    #featured-btn {
+      background: rgba(255,255,255,0.15);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: .82rem;
+      cursor: pointer;
+      outline: none;
+      white-space: nowrap;
+      transition: background .15s, border-color .15s;
+    }
+    #featured-btn.active {
+      background: #f39c12;
+      border-color: #f39c12;
+      color: white;
+    }
+    .popup-featured {
+      border-top: 1px solid #eee;
+      padding: 10px 16px 14px;
+      background: #fffdf5;
+    }
+    .popup-featured-title {
+      font-size: .7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      color: #b8860b;
+      margin-bottom: 8px;
+    }
+    .popup-feat-block { margin-bottom: 10px; }
+    .popup-feat-block:last-child { margin-bottom: 0; }
+    .popup-feat-program {
+      font-size: .82rem;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 4px;
+    }
+    .popup-feat-row {
+      display: flex;
+      gap: 6px;
+      font-size: .78rem;
+      color: #444;
+      margin-bottom: 3px;
+      align-items: flex-start;
+    }
+    .popup-feat-label {
+      font-weight: 600;
+      color: #888;
+      flex-shrink: 0;
+      min-width: 56px;
+    }
   </style>
 </head>
 <body>
@@ -152,6 +204,7 @@
       <span id="count-label">71 centres across Taiwan</span>
     </div>
     <div id="filters">
+      <button id="featured-btn">⭐ Featured schools only</button>
       <div class="ms-wrap">
         <button class="ms-btn" id="region-btn">All regions</button>
         <div class="ms-panel" id="region-panel"></div>
@@ -168,6 +221,30 @@
   <script>
     const centres = [{"no": 1, "university": "National Central University", "center": "Language Center", "address": "No. 300, Jhongda Rd., Jhongli District, Taoyuan City 32001, Taiwan", "tel": "+886-3-4227151 ext.33818", "fax": "+886-3-4255384", "email": "ncu3800@ncu.edu.tw", "region": "Northern Taiwan", "lat": 24.97, "lon": 121.194}, {"no": 2, "university": "National Taipei University of Education", "center": "Chinese Language Education Center", "address": "Room 202 Du-Xing Building, No.134, Sec. 2, Heping E. Rd., Da-an District, Taipei City 106, Taiwan(R.O.C.)", "tel": "+886-2-27321104 ext.82035", "fax": "+886-2-27325950", "email": "clec@tea.ntue.edu.tw", "region": "Northern Taiwan", "lat": 25.0234461, "lon": 121.5452531}, {"no": 3, "university": "National Taiwan University", "center": "Chinese Language Division Language Center", "address": "R.222, 2F, No.170, Sec.2, Xin-Hai Rd., Da-an Dist., Taipei City, Taiwan, 10663. R.O.C.", "tel": "+886-2-33663417", "fax": "+886-2-83695042", "email": "cld222@ntu.edu.tw", "region": "Northern Taiwan", "lat": 25.0168175, "lon": 121.5384571}, {"no": 4, "university": "National Taiwan University", "center": "International Chinese Language Program (ICLP)", "address": "3-4F, Language Building, No.170, Sec. 2, Xinhai Rd., Da'an Dist., Taipei City 106, Taiwan", "tel": "+886-2-23639123", "fax": "+886-2-23626926", "email": "iclp@ntu.edu.tw", "region": "Northern Taiwan", "lat": 25.0168175, "lon": 121.5384571}, {"no": 5, "university": "National Taiwan Normal University", "center": "Mandarin Training Center", "address": "129 Heping East Road, Sec. 1, Taipei City, Taiwan, ROC", "tel": "+886-2-77495130", "fax": "+886-2-23418431", "email": "mtc@mtc.ntnu.edu.tw", "region": "Northern Taiwan", "lat": 25.0082321, "lon": 121.5357715}, {"no": 6, "university": "National Yang Ming Chiao Tung University", "center": "Chinese Language Division, Language Teaching and Research Center", "address": "Rm. A526, Assembly Building 1, No.1001, Daxue Rd., East Dist., Hsinchu City 30010, Taiwan (R.O.C.)", "tel": "+886-3-5131231", "fax": "", "email": "sophiapeng26@nycu.edu.tw", "region": "Northern Taiwan", "lat": 25.1224685, "lon": 121.5129127}, {"no": 7, "university": "National Chengchi University", "center": "Chinese Language Center", "address": "64, ZhiNan Road, Sec. 2 Wenshan District, 11605 Taipei, Taiwan, R.O.C.", "tel": "+886-2-29387141; +886-2-29387268", "fax": "+886-2-29396353", "email": "mandarin@nccu.edu.tw", "region": "Northern Taiwan", "lat": 24.9802091, "lon": 121.5749593}, {"no": 8, "university": "Chinese Culture University", "center": "Mandarin Learning Center", "address": "10659 No. 231 Jian-Guo South Rd. Sec. 2, Taipei", "tel": "+886-2-27005858 ext. 8130", "fax": "+886-2-27081257", "email": "mlc@sce.pccu.edu.tw", "region": "Northern Taiwan", "lat": 25.1359608, "lon": 121.5389922}, {"no": 9, "university": "Tamkang University", "center": "Chinese Language Center", "address": "No.5, Ln.199, Jinhua St., Da'an Dist., Taipei City 106, Taiwan (R.O.C.)", "tel": "+886-2-23216320", "fax": "+886-2-23214036", "email": "clc@clc.tku.edu.tw", "region": "Northern Taiwan", "lat": 25.1749822, "lon": 121.4503498}, {"no": 10, "university": "Fu Jen Catholic University", "center": "Center of Chinese Language and Culture", "address": "No. 510 Zhongzheng Rd, Xinzhuang Dist., New Taipei City, 24205 Taiwan (R.O.C)", "tel": "+886-2-29052414; +886-2-29052487; +886-2-29052071; +886-2-29053721", "fax": "", "email": "flcg1013@mail.fju.edu.tw", "region": "Northern Taiwan", "lat": 25.0356532, "lon": 121.4324612}, {"no": 11, "university": "Ming Chuan University", "center": "Mandarin Studies and Culture Center", "address": "Room J318, 3F, No. 130, Jihe Road, Shilin District, Taipei City, 111", "tel": "+886-2-28824564 ext.8210", "fax": "", "email": "mscc@mail.mcu.edu.tw", "region": "Northern Taiwan", "lat": 25.087089, "lon": 121.5267033}, {"no": 12, "university": "Kainan University", "center": "Chinese Language Center", "address": "No. 1, Kainan road, Luzhu District, Taoyuan City, Taiwan", "tel": "+886-3-3412500 ext.4140", "fax": "", "email": "mandarin@gapps.knu.edu.tw", "region": "Northern Taiwan", "lat": 24.9706, "lon": 121.2767}, {"no": 13, "university": "Chung Yuan Christian University", "center": "Mandarin Learning Center", "address": "No. 200, Zhongbei Rd., Zhongli Dist., Taoyuan City 320314, Taiwan (R.O.C.)", "tel": "+886-3-2656536", "fax": "+886-3-2656539", "email": "cmlcycu@cycu.edu.tw", "region": "Northern Taiwan", "lat": 24.9575, "lon": 121.207}, {"no": 14, "university": "Chung Hua University", "center": "Chinese Language Center", "address": "707, Sec.2, WuFu Rd., Hsinchu, Taiwan 30012, R.O.C.", "tel": "+886-3-5374281", "fax": "+886-3-5373771", "email": "international@g.chu.edu.tw", "region": "Northern Taiwan", "lat": 24.7925, "lon": 120.9782}, {"no": 15, "university": "Taipei City University of Science and Technology", "center": "Mandarin Center", "address": "No. 2, Xueyuan Rd., Peitou, 112 Taipei, Taiwan, R.O.C.", "tel": "+886-2-28927154", "fax": "+886-2-28965951", "email": "q5900@tpcu.edu.tw", "region": "Northern Taiwan", "lat": 25.1345772, "lon": 121.4691357}, {"no": 16, "university": "China University of Science and Technology", "center": "Language Center", "address": "No.245, Sec. 3, Academia Rd., Nangang Dist., Taipei City 115, Taiwan (R.O.C.)", "tel": "+886-2-27821862 ext.246", "fax": "", "email": "language@www.cust.edu.tw", "region": "Northern Taiwan", "lat": 25.0323042, "lon": 121.6101238}, {"no": 17, "university": "Lunghwa University of Science and Technology", "center": "Chinese Language Center", "address": "No.300, Sec.1, Wanshou Rd., Guishan District, Taoyuan City, 333326, Taiwan (R.O.C.)", "tel": "+886-3-82093211", "fax": "+886-3-82091468", "email": "ice@mail.lhu.edu.tw", "region": "Northern Taiwan", "lat": 24.9919, "lon": 121.2847}, {"no": 18, "university": "Soochow University", "center": "Chinese Language Center", "address": "No.70, Linxi Rd., Shihlin Dist., Taipei, Taiwan 111002", "tel": "+886-2-28819471 ext..5922", "fax": "+886-2-2883-8350", "email": "mandarin@scu.edu.tw", "region": "Northern Taiwan", "lat": 25.0947592, "lon": 121.5454306}, {"no": 19, "university": "Nanya Institute of Technology", "center": "The Chinese Language Section, International Language Center", "address": "NO.414, Sec.3, Jhongshan E. Rd., Zhongli District, Taoyuan City 32091 Taiwan(R.O.C.)", "tel": "+886-3-4361070", "fax": "", "email": "cls@tiit.edu.tw", "region": "Northern Taiwan", "lat": 24.995357, "lon": 121.4515554}, {"no": 20, "university": "National United University", "center": "Chinese Language Center", "address": "(Ba-ja campus) No. 2, Lien-Da, Nanshi Village, Miaoli city, Miaoli County, 36063, Taiwan", "tel": "+886-37-382146", "fax": "+886-37-382148", "email": "clc@nuu.edu.tw", "region": "Northern Taiwan", "lat": 24.5747, "lon": 120.8192}, {"no": 21, "university": "Shih Chien University", "center": "Chinese Language Center", "address": "No. 70, Dazhi St, Zhongshan District, Taipei City, 10491", "tel": "+886-2-25381111 ext.2551", "fax": "", "email": "Chinese@g2.usc.edu.tw", "region": "Northern Taiwan", "lat": 25.0844761, "lon": 121.5454056}, {"no": 22, "university": "National Taipei University of Technology", "center": "Chinese Language Training Center", "address": "1st Floor(blue door), Sun Yat-Sen Memorial Building, No.1, Section 3, Zhongxiao East Road, Taipei City, 10608", "tel": "+886-2-27712171 ext.1710", "fax": "+886-2-27219524", "email": "cltc@ntut.edu.tw", "region": "Northern Taiwan", "lat": 25.0430636, "lon": 121.5346877}, {"no": 23, "university": "Shih Hsin University", "center": "Mandarin Teaching Center", "address": "#1 Lane 17 Sec. 1 , Mu-Cha Rd. Taipei , 11604, Taiwan, R.O.C.", "tel": "+886-22368225 ext.82258", "fax": "", "email": "ctcshu@mail.shu.edu.tw", "region": "Northern Taiwan", "lat": 24.9895605, "lon": 121.5468877}, {"no": 24, "university": "National Tsing Hua University", "center": "Chinese Language Center", "address": "No.101, Section 2, Kuang-Fu Road, Hsinchu, Taiwan 30013, R.O.C", "tel": "+886-3-5715131 ext. 62355", "fax": "+886-3-5735568", "email": "clc@my.nthu.edu.tw; clc35087@gapp.nthu.edu.tw", "region": "Northern Taiwan", "lat": 24.7959, "lon": 120.9964}, {"no": 25, "university": "National Taiwan Ocean University", "center": "Mandarin Learning and Education Center", "address": "ECG Rm. A310, No. 2, Beining Rd., Zhongzheng Dist., Keelung City 202301, Taiwan (R.O.C.)", "tel": "+886-2-24622192 ext.2430", "fax": "+886-2-24632371", "email": "ntouclc@email.ntou.edu.tw", "region": "Northern Taiwan", "lat": 25.154, "lon": 121.7809}, {"no": 26, "university": "Vanung University", "center": "Chinese Language Center", "address": "No.1, Wanneng Rd., Zhongli Dist., Taoyuan City 320676, Taiwan (R.O.C.)", "tel": "+886-3-4515811 ext.40003", "fax": "+886-3-4513786", "email": "koli1230@mail.vnu.edu.tw", "region": "Northern Taiwan", "lat": 24.9648, "lon": 121.2193}, {"no": 27, "university": "Minghsin University of Science and Technology", "center": "Chinese Language Teaching Center", "address": "7F Hongchao Building No.1, Xinxing Rd., Xinfeng Hsinchu 30401, Taiwan (R.O.C)", "tel": "+886-3-5593142", "fax": "+886-3-5577682 ext.1706", "email": "mandarin@must.edu.tw", "region": "Northern Taiwan", "lat": 24.8295, "lon": 120.9698}, {"no": 28, "university": "National Taiwan Sport University", "center": "Chinese Language Center", "address": "No.250 Wenhua 1st Rd. Gueishan, Taoyuan City, Taiwan 33301", "tel": "+886-3-3283201 ext.1216", "fax": "+886-3-3278319", "email": "international@ntsu.edu.tw", "region": "Northern Taiwan", "lat": 25.0158, "lon": 121.2838}, {"no": 29, "university": "Yuanpei University of Medical Technology", "center": "Chinese Language Learning Center", "address": "No.306, Yuanpei Street, Hsinchu, Taiwan 30015, R.O.C.", "tel": "+886-3-6102488", "fax": "", "email": "ypucllc0311@gmail.com", "region": "Northern Taiwan", "lat": 24.8096, "lon": 120.9882}, {"no": 30, "university": "Chungyu University of Film and Arts", "center": "Chinese Language Center", "address": "No.40, Yiqi Road, Xinyi District, Keelung City 20103, Taiwan (R.O.C.)", "tel": "+886-2-24237785", "fax": "", "email": "national@cufa.edu.tw", "region": "Northern Taiwan", "lat": 25.1308, "lon": 121.7349}, {"no": 31, "university": "Yuan Ze University", "center": "Mandarin Learning Center", "address": "(Building 1, B1, Room 1013) No. 135, Yuandong Rd., Zhongli Dist., Taoyuan City 320315, Taiwan (R.O.C.)", "tel": "+886-3-4638800 ext.2491", "fax": "", "email": "aldept@saturn.yzu.edu.tw", "region": "Northern Taiwan", "lat": 25.0865416, "lon": 121.3825833}, {"no": 32, "university": "China University of Technology", "center": "Chinese Language Center", "address": "No.530, Sec.3, Jhong-Shan Rd, Hukou, Hsinchu, Taiwan(R.O.C)", "tel": "+886-3-699-1111 ext 2205", "fax": "", "email": "", "region": "Northern Taiwan", "lat": 24.9981756, "lon": 121.5547884}, {"no": 33, "university": "Tunghai University", "center": "Chinese Language Center", "address": "Rm. 103, Language Building, No. 1727, Sec. 4, Taiwan Boulevard, Xitun Dist., Taichung, Taiwan 40704 R.O.C.", "tel": "+886-4-23590259", "fax": "+886-4-23594408", "email": "clc@thu.edu.tw", "region": "Central Taiwan", "lat": 24.1788982, "lon": 120.6045034}, {"no": 34, "university": "Feng Chia University", "center": "Chinese Language Center", "address": "4F, 2nd Administration Building No. 100 Wenhwa Rd. Seatwen Taichung, Taiwan 40724, R.O.C.", "tel": "+886-4-24517250 ext.5871", "fax": "", "email": "fcuclc.apply@gmail.com", "region": "Central Taiwan", "lat": 24.1800576, "lon": 120.6483389}, {"no": 35, "university": "Providence University", "center": "Chinese Language Education Center", "address": "200, Sec. 7, Taiwan Boulevard, Shalu Dist., Taichung City 43301, Taiwan (St. Peter Hall Room 401)", "tel": "+886-4-26328001 ext.11590", "fax": "+886-4-26330340", "email": "clhuang@pu.edu.tw", "region": "Central Taiwan", "lat": 24.2268822, "lon": 120.580697}, {"no": 36, "university": "National Taichung University of Education", "center": "Chinese Language Center", "address": "No. 6, Sec. 1, Xiangshang Rd., West Dist., Taichung City 403008, Taiwan (R.O.C.)", "tel": "886-4-22183283", "fax": "886-4-22188150", "email": "clc@mail.ntcu.edu.tw", "region": "Central Taiwan", "lat": 24.1436299, "lon": 120.6717721}, {"no": 37, "university": "Chienkuo Technology University", "center": "Language Center", "address": "No.1, Chiehshou North Road, Changhua City 500020, Taiwan, R.O.C.", "tel": "+886-4-7111111 ext. 4000", "fax": "", "email": "lc@ctu.edu.tw", "region": "Central Taiwan", "lat": 24.0748, "lon": 120.54}, {"no": 38, "university": "National Chung Hsing University", "center": "Chinese Language Center", "address": "145, Xingda Road, South District, Taichung City, Taiwan", "tel": "+886-4-22840326 ext.312", "fax": "+886-4-22859956", "email": "chinesenchu@gmail.com", "region": "Central Taiwan", "lat": 24.120844, "lon": 120.6757137}, {"no": 39, "university": "National Changhua University of Education", "center": "Language Center", "address": "No.108, Xueshi St., Changhua City 500041, Taiwan", "tel": "+886-4-7232105 ext.1663", "fax": "+886-4-7211226", "email": "ncuelcch@gmail.com", "region": "Central Taiwan", "lat": 24.0673, "lon": 120.5332}, {"no": 40, "university": "Chaoyang University of Technology", "center": "Chinese Learning Center", "address": "NO.168 Jifong East RD., Wufong Dist., Taichung City Taiwan", "tel": "+886-4-23323000 ext.5252", "fax": "", "email": "cl@gm.cyut.edu.tw", "region": "Central Taiwan", "lat": 24.0687658, "lon": 120.714492}, {"no": 41, "university": "National Yunlin University of Science and Technology", "center": "Language Center", "address": "DH203, 2F Building 1 College Of Humanities And Applied Sciences 123 University Road, Section 3, Douliou, Yunlin 64002, Taiwan, R.O.C", "tel": "+886-5-5342601 ext.3271", "fax": "", "email": "clyen@yuntech.edu.tw", "region": "Central Taiwan", "lat": 23.6978, "lon": 120.5343}, {"no": 42, "university": "National Chin-Yi University of Technology", "center": "Language Center", "address": "No.57, Sec 2, Zhongshan Rd., Taiping District., Taichung 411030, Taiwan", "tel": "+886-4-23924505", "fax": "", "email": "tuanjung@ncut.edu.tw", "region": "Central Taiwan", "lat": 24.1452469, "lon": 120.7300972}, {"no": 43, "university": "Da-Yeh University", "center": "Chinese Language Teaching Center", "address": "No. 168, Xuefu Road, Dacun Township, Changhua County 515006 (near Yuanlin Railway Station)", "tel": "+886-4-8511888", "fax": "", "email": "clc@mail.dyu.edu.tw", "region": "Central Taiwan", "lat": 23.8618, "lon": 120.5568}, {"no": 44, "university": "Asia University", "center": "Chinese Language Center", "address": "No. 500 Liufeng Road, Wufeng, Taichung 41354, Taiwan (R.O.C.)", "tel": "+886-4-23323455 ext.6286", "fax": "", "email": "jclc@asia.edu.tw", "region": "Central Taiwan", "lat": 24.0462096, "lon": 120.6860308}, {"no": 45, "university": "Hungkuang University", "center": "Chinese Language Center", "address": "No. 1018, Sec. 6, Taiwan Boulevard, Shalu District, Taichung City 433304, Taiwan (R.O.C.)", "tel": "+886-4-26318652 ext.6167", "fax": "", "email": "hkclc@hk.edu.tw", "region": "Central Taiwan", "lat": 24.2174971, "lon": 120.5802556}, {"no": 46, "university": "National Chi Nan University", "center": "Language Teaching Center", "address": "No. 1, Daxue Rd., Puli Township, Nantou County, Taiwan (R.O.C.)", "tel": "+886-4-92910960 ext.2654", "fax": "", "email": "", "region": "Central Taiwan", "lat": 23.9527, "lon": 120.968}, {"no": 47, "university": "National Chiayi University", "center": "Language Center-Division of Chinese as a Second Language", "address": "No.300 Syuefu Rd., Chiayi City 600355, Taiwan (R.O.C.)", "tel": "+886-5-2732983", "fax": "", "email": "cslncyu@mail.ncyu.edu.tw", "region": "Southern Taiwan", "lat": 23.4845, "lon": 120.4574}, {"no": 48, "university": "National Kaohsiung Normal University", "center": "Center of Language and Culture Teaching", "address": "No.116, Heping 1st Rd., Lingya Dist., Kaohsiung City 802, Taiwan (R.O.C.)", "tel": "+886-7-7172930 ext.2601", "fax": "", "email": "clcts213@gmail.com", "region": "Southern Taiwan", "lat": 22.7864877, "lon": 120.4057742}, {"no": 49, "university": "National Cheng Kung University", "center": "Chinese Language Center", "address": "No.1, University Road, Tainan City 701, Taiwan (R.O.C)", "tel": "+886-6-2757575 ext.52040", "fax": "+886-6-2742516", "email": "em52040@email.ncku.edu.tw", "region": "Southern Taiwan", "lat": 22.9965, "lon": 120.2179}, {"no": 50, "university": "National Sun Yat-Sen University", "center": "Chinese Language Center", "address": "No. 70, Lian-hai Road, Kaohsiung, 804, Taiwan", "tel": "+886-7-5252000 ext.3030", "fax": "", "email": "alfc@mail.nsysu.edu.tw", "region": "Southern Taiwan", "lat": 22.6280059, "lon": 120.2662241}, {"no": 51, "university": "National University of Kaohsiung", "center": "Language Center", "address": "No 700, Kaohsiung University Rd., Nanzih District, Kaohsiung 811, Taiwan, R.O.C.", "tel": "+886-7-5919257", "fax": "+886-7-5919258", "email": "clc@nuk.edu.tw", "region": "Southern Taiwan", "lat": 22.73263, "lon": 120.28425}, {"no": 52, "university": "Southern Taiwan University of Science and Technology", "center": "Chinese Language Center", "address": "L307, No. 1, Nan-Tai Street, Yungkang Dist., Tainan City 710, Taiwan R.O.C.", "tel": "+886-6-62533131 ext.1601", "fax": "", "email": "dept_chilance@stust.edu.tw", "region": "Southern Taiwan", "lat": 23.0345, "lon": 120.2618}, {"no": 53, "university": "Wenzao Ursuline University of Languages", "center": "Chinese Languages Center", "address": "No.900 Minzu 1st Road, Kaohsiung 807679, Taiwan R.O.C.", "tel": "+886-7-3426031 ext.3302", "fax": "", "email": "clc@mail.wzu.edu.tw", "region": "Southern Taiwan", "lat": 22.6698649, "lon": 120.3188223}, {"no": 54, "university": "National Pingtung University of Science and Technology", "center": "Language Center", "address": "No.1, Shuefu Road, 91201 Neipu, Pingtung Taiwan, R.O.C.", "tel": "+886-8-7703202 ext.7715", "fax": "", "email": "npust.clc@gmail.com", "region": "Southern Taiwan", "lat": 22.6478, "lon": 120.6029}, {"no": 55, "university": "National Pingtung University", "center": "Chinese Language Center", "address": "2nd Floor, Jing-Yie Building, No. 1 Linsen Rd., Pingtung City, Pingtung County 90003, Taiwan (R.O.C.)", "tel": "+886-8-7663800 ext.24001", "fax": "", "email": "clc@mail.nptu.edu.tw", "region": "Southern Taiwan", "lat": 22.6752, "lon": 120.4936}, {"no": 56, "university": "I-Shou University", "center": "Chinese Language Center", "address": "No.1, Sec. 1, Syuecheng Rd. Dashu District, Kaohsiung City 84001 Taiwan, R.O.C. International College Building 1st Floor", "tel": "+886-7-6577711 ext.2613", "fax": "+886-7-6577472", "email": "isuclc@isu.edu.tw", "region": "Southern Taiwan", "lat": 22.7270551, "lon": 120.4063525}, {"no": 57, "university": "Kun Shan University", "center": "Chinese Language Center", "address": "No.195, Kunda Rd., Yongkang Dist., Tainan City 710303, Taiwan (R.O.C.)", "tel": "+886-6-2727175", "fax": "", "email": "lcc@mail.ksu.edu.tw", "region": "Southern Taiwan", "lat": 22.9942, "lon": 120.3205}, {"no": 58, "university": "Nan Hua University", "center": "Chinese Language Center", "address": "No.55, Sec. 1, Nanhua Rd., Dalin Township, Chiayi County 62249, Taiwan (R.O.C.)", "tel": "+886-5-2721001 ext.1711", "fax": "", "email": "nhu.oica@nhu.edu.tw", "region": "Southern Taiwan", "lat": 23.5607, "lon": 120.4794}, {"no": 59, "university": "Shu-Te University", "center": "International Teaching and Language Center, Chinese Teaching Division", "address": "No.59, Hengshan Rd., Yanchao Dist., Kaohsiung City 82445, Taiwan (R.O.C.)", "tel": "+886-7-6158000 ext.4053", "fax": "+886-7-6158000 ext.4099", "email": "ctd@stu.edu.tw", "region": "Southern Taiwan", "lat": 22.7644538, "lon": 120.3722925}, {"no": 60, "university": "Chang Jung Christian University", "center": "Chinese Language & Culture Center", "address": "No.1, Changda Rd., Gueiren District, Tainan City 71101, Taiwan (R.O.C.)", "tel": "+886-6-2785123 ext.5081", "fax": "+886-6-2785175", "email": "clcc@mail.cjcu.edu.tw", "region": "Southern Taiwan", "lat": 22.9655, "lon": 120.2366}, {"no": 61, "university": "WuFeng University", "center": "Chinese Language Center", "address": "117, Sec 2, Chiankuo Rd, Minhsiung, Chiayi County 62153, Taiwan (R.O.C.)", "tel": "+886-5-2267125 ext. 61113", "fax": "", "email": "elle@wfu.edu.tw", "region": "Southern Taiwan", "lat": 23.554, "lon": 120.4513}, {"no": 62, "university": "Fooyin University", "center": "Chinese Language Center", "address": "151 Jinxue Rd., Daliao Dist., Kaohsiung City, Taiwan (R.O.C.)", "tel": "+886-7-7811151 ext. 2402", "fax": "+886-7-7828258", "email": "clc@fy.edu.tw", "region": "Southern Taiwan", "lat": 22.6086023, "lon": 120.3948702}, {"no": 63, "university": "Cheng Shiu University", "center": "Chinese Language Center", "address": "833301 No.840, Chengqing Rd., Niaosong Dist., Kaohsiung City 833, Taiwan (R.O.C.)", "tel": "+886-7-7358800 ext.6260", "fax": "", "email": "CLC@gcloud.csu.edu.tw", "region": "Southern Taiwan", "lat": 22.6492954, "lon": 120.3500371}, {"no": 64, "university": "National Kaohsiung University of Hospitality and Tourism", "center": "Chinese Section", "address": "H103, International Building, No. 1, Songhe Road, Xiaogang District, Kaohsiung City 812301", "tel": "+886-7-8060505 ext. 19611", "fax": "", "email": "nkuhtchinese@gmail.com", "region": "Southern Taiwan", "lat": 22.5636543, "lon": 120.3723094}, {"no": 65, "university": "National Chung Cheng University", "center": "Center for Language Studies", "address": "No.168, Sec. 1, University Road, Minhsiung Township, Chiayi County 621301, Taiwan (R.O.C.)", "tel": "+886-5-2720411 ext. 16714", "fax": "", "email": "ChiLang@ccu.edu.tw", "region": "Southern Taiwan", "lat": 23.5737, "lon": 120.4813}, {"no": 66, "university": "Meiho University", "center": "Chinese Language Center", "address": "No. 23, Pingguang Road, Meihe Village, Neipu", "tel": "+886-8-7799821 ext. 8739", "fax": "+886-8-7782663", "email": "muhuayu@go.meiho.edu.tw", "region": "Southern Taiwan", "lat": 22.6408, "lon": 120.59}, {"no": 67, "university": "Tzu Chi University of Science and Technology", "center": "Chinese Language Center", "address": "970302 No. 880, Section 2, Jianguo Road, Hualien City, Taiwan", "tel": "+886-3-8572158 ext.22368", "fax": "+886-3-8466065", "email": "tcuclc@gms.tcu.edu.tw", "region": "Eastern Taiwan", "lat": 23.9976829, "lon": 121.5647665}, {"no": 68, "university": "Fo Guang University", "center": "Chinese Language Instruction Center", "address": "No. 257, Zhongshan Rd., Sec. 3, Yilan City, 260, Taiwan", "tel": "+886-3-9313343 ext.302", "fax": "+886-3-9315903", "email": "clic@mail.fgu.edu.tw", "region": "Eastern Taiwan", "lat": 24.7378, "lon": 121.7655}, {"no": 69, "university": "National Dong Hwa University", "center": "Chinese Language Center", "address": "D204 H.S.S. Bldg.III - No. 1, Sec. 2, Da Hsueh Rd., Shoufeng, Hualien 974301, Taiwan, R.O.C.", "tel": "+886-3-890-5248", "fax": "", "email": "clcndhu@gms.ndhu.edu.tw", "region": "Eastern Taiwan", "lat": 23.8973249, "lon": 121.542578}, {"no": 70, "university": "National Taitung University", "center": "Chinese Teaching and Study Center", "address": "684, Sec.1, Chunghua Rd., Taitung, Taiwan, R.O.C", "tel": "+886-89-517367", "fax": "+886-89-517763", "email": "nttucltsc@gm.nttu.edu.tw", "region": "Eastern Taiwan", "lat": 22.7493, "lon": 121.1341}, {"no": 71, "university": "National Quemoy University", "center": "Chinese Language Center", "address": "No. 1, Daxue Road, Jinning Township, Kinmen County, 892", "tel": "+886-82-313503", "fax": "+886-82-313504", "email": "clc@email.nqu.edu.tw", "region": "Offshore Islands", "lat": 24.4467057, "lon": 118.3252738}];
 
+    // Featured school comparison data (keyed by centre no.)
+    const featured = {
+      5: { programs: [
+        { name: "MTC — Mandarin Training Center", popularity: "Highest in Taiwan — ~1,700 students/quarter, 50,000+ alumni", uniRank: "#435 (QS 2026)", reviews: "The default. Huge, diverse, social; clubs + library + pool + language exchange all open to you. Structured Dangdai curriculum, TOCFL-aligned, affordable. Downsides: 6–10 per class so limited talk-time, fixed pace, teacher lottery, some bureaucracy. Lively Shida/Gongguan student area." },
+        { name: "ALC — Advanced Learning of Chinese", popularity: "Boutique — small, few sections", uniRank: "#435 (QS 2026)", reviews: "MTC but premium. Same curriculum and same NTNU community/clubs, but 4–6 per class = far more speaking. ~60% pricier than MTC. Fewer sections, so confirm a beginner level runs your term." },
+      ]},
+      4: { programs: [
+        { name: "ICLP — International Chinese Language Program", popularity: "Selective, small elite intake", uniRank: "#=63 (QS 2026)", reviews: "The prestige intensive. 2–4 per class plus 1-on-1, 4 hrs/day plus heavy prep. Top teachers, fastest progress, classical Chinese. But a crucible: high pressure, ~3–4× MTC cost, socially a bit siloed from NTU life. Built for academics/diplomats, not enjoy-it stints." },
+      ]},
+      3: { programs: [
+        { name: "CLD — Chinese Language Division", popularity: "Moderate, year-round", uniRank: "#=63 (QS 2026)", reviews: "Small interactive classes with lots of practice; well-liked teachers, helpful admin; takes beginners. NTU campus access (library, sports centre). But club integration is DIY — runs through buddy/language-exchange, not automatic club membership." },
+      ]},
+      7: { programs: [
+        { name: "CLC — Chinese Language Center", popularity: "Moderate-to-small community", uniRank: "#=604 (QS 2026)", reviews: "Quiet, green Muzha campus near the hills. Interactive teaching, formal/political-business Chinese leaning. Trade-off: far from central Taipei, smaller peer network." },
+      ]},
+      8: { programs: [
+        { name: "MLC — Mandarin Learning Center", popularity: "High — ~1,000 foreign students/year", uniRank: "Not in QS World ranked range", reviews: "Big cohort, strong cultural courses (calligraphy, painting), small classes praised for interaction. Daan satellite campus (central). Can run cheaper/more flexible than MTC. Less plugged into main-campus undergrad life." },
+      ]},
+      9: { programs: [
+        { name: "CLC — Chinese Language Center", popularity: "Moderate, flexible", uniRank: "Not in QS World ranked range", reviews: "Small classes (7–15), monthly start dates = flexible entry, traditional + Pinyin. Main campus is out in Tamsui, so less central and a bit removed from a big young Taipei crowd." },
+      ]},
+    };
+    const featuredNos = new Set(Object.keys(featured).map(Number));
+
     const map = L.map("map").setView([23.85, 120.95], 8);
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -183,7 +260,24 @@
       "Offshore Islands": "#8e44ad",
     };
 
-    function makeIcon(colour) {
+    function makeIcon(colour, isFeatured) {
+      if (isFeatured) {
+        return L.divIcon({
+          className: "",
+          html: `<div style="
+            width:20px;height:20px;
+            background:${colour};
+            border:3px solid #f39c12;
+            border-radius:50%;
+            box-shadow:0 0 0 2px white, 0 2px 6px rgba(0,0,0,.5);
+            display:flex;align-items:center;justify-content:center;
+            font-size:10px;line-height:1;
+          ">⭐</div>`,
+          iconSize: [20, 20],
+          iconAnchor: [10, 10],
+          popupAnchor: [0, -13],
+        });
+      }
       return L.divIcon({
         className: "",
         html: `<div style="
@@ -201,14 +295,27 @@
 
     // Build markers
     const markers = centres.map(c => {
-      const colour = regionColours[c.region] || "#555";
-      const icon   = makeIcon(colour);
+      const colour     = regionColours[c.region] || "#555";
+      const isFeatured = featuredNos.has(c.no);
+      const icon       = makeIcon(colour, isFeatured);
 
       const rows = [];
       if (c.address) rows.push(`<div class="popup-row"><span class="popup-icon">📍</span><span>${c.address}</span></div>`);
       if (c.tel)     rows.push(`<div class="popup-row"><span class="popup-icon">📞</span><span>${c.tel}</span></div>`);
       if (c.fax)     rows.push(`<div class="popup-row"><span class="popup-icon">📠</span><span>${c.fax}</span></div>`);
       if (c.email)   rows.push(`<div class="popup-row"><span class="popup-icon">✉️</span><a class="popup-link" href="mailto:${c.email}">${c.email}</a></div>`);
+
+      let featuredSection = "";
+      if (isFeatured) {
+        const blocks = featured[c.no].programs.map(p => `
+          <div class="popup-feat-block">
+            <div class="popup-feat-program">${p.name}</div>
+            <div class="popup-feat-row"><span class="popup-feat-label">Scale</span><span>${p.popularity}</span></div>
+            <div class="popup-feat-row"><span class="popup-feat-label">QS rank</span><span>${p.uniRank}</span></div>
+            <div class="popup-feat-row"><span class="popup-feat-label">Vibe</span><span>${p.reviews}</span></div>
+          </div>`).join('<hr style="border:none;border-top:1px dashed #ddd;margin:8px 0">');
+        featuredSection = `<div class="popup-featured"><div class="popup-featured-title">⭐ Featured program notes</div>${blocks}</div>`;
+      }
 
       const popup = `
         <div class="popup-header">
@@ -218,7 +325,8 @@
         <div class="popup-body">
           ${rows.join("")}
           <div class="region-badge">${c.region}</div>
-        </div>`;
+        </div>
+        ${featuredSection}`;
 
       const marker = L.marker([c.lat, c.lon], { icon })
         .bindPopup(popup, { maxWidth: 340 })
@@ -234,6 +342,15 @@
 
     // Add all markers initially
     markers.forEach(m => m.marker.addTo(map));
+
+    // ── Featured toggle ──
+    let featuredOnly = false;
+    const featuredToggle = document.getElementById("featured-btn");
+    featuredToggle.addEventListener("click", () => {
+      featuredOnly = !featuredOnly;
+      featuredToggle.classList.toggle("active", featuredOnly);
+      applyFilters();
+    });
 
     // ── Multi-select filter state ──
     const selectedRegions = new Set();
@@ -332,9 +449,10 @@
       let visible = 0;
       const visibleMarkers = [];
       markers.forEach(({ centre: c, marker }) => {
-        const matchRegion = !selectedRegions.size || selectedRegions.has(c.region);
-        const matchSchool = !selectedSchools.size || selectedSchools.has(c.no);
-        if (matchRegion && matchSchool) {
+        const matchRegion   = !selectedRegions.size || selectedRegions.has(c.region);
+        const matchSchool   = !selectedSchools.size || selectedSchools.has(c.no);
+        const matchFeatured = !featuredOnly || featuredNos.has(c.no);
+        if (matchRegion && matchSchool && matchFeatured) {
           marker.addTo(map);
           visibleMarkers.push([c.lat, c.lon]);
           visible++;
